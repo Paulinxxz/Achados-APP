@@ -5,7 +5,7 @@ export default function App() {
   return (
     <AuthProvider>
       <Rotas />
-    </AuthProvider>
+    </AuthProvider> 
   );
 }
 

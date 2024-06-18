@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { useState } from 'react';
 import React from 'react'
 
-export default function Insert() {
+export default function Insert({handle}) {
   const [usuarioNome, setUsuarioNome] = useState();
   const [usuarioTelefone, setUsuarioTelefone] = useState();
   const [usuarioEmail, setUsuarioEmail] = useState();
@@ -22,7 +22,7 @@ export default function Insert() {
       })
     })
       .then((response) => response.json() )
-      .then( json => { setUsuarioTelefone(''), setUsuarioEmail(''), setUsuarioNome(''),  setUsuarioSenha('') })
+      .then( json => { setUsuarioTelefone(''), setUsuarioEmail(''), setUsuarioNome(''),  setUsuarioSenha(''), handle(false)})
       .catch(err => console.log(err));
   }
   return (

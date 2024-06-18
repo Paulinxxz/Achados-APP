@@ -3,8 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Home from '../Pages/Home';
-import CadastroUsuario from '../Pages/CadastroUsuario';
-import Buscar from '../Pages/Buscar';
 import Login from '../Pages/Login';
 import { useContext } from 'react';
 import { AuthContext } from '../Context/AuthContext';
@@ -21,7 +19,7 @@ export default function Rotas() {
   const { logado } = useContext(AuthContext);
 
   if (!logado) {
-    //return <Login />;
+    return <Login />;
   }
 
   return (
@@ -43,24 +41,6 @@ export default function Rotas() {
               ),
             }}
           />
-          <Tab.Screen
-            name="Buscar"
-            component={Buscar}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="search" color={color} size={25} />
-              ),
-            }}
-          />
-           <Tab.Screen
-            name="CadastroUsuario"
-            component={CadastroUsuario}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="person-outline" color={color} size={25} />
-              ),
-            }}
-          />
         </Tab.Navigator>
       </NavigationContainer>
     </>
@@ -70,7 +50,7 @@ export default function Rotas() {
 const styles = StyleSheet.create({
   header: {
     height: 50,
-    backgroundColor: '#50524F',
+    backgroundColor: '#282828',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
@@ -78,7 +58,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   tabBar: {
-    backgroundColor: '#191919',
+    backgroundColor: '#282828',
     height: 50,
   },
 });

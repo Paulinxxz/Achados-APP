@@ -3,11 +3,13 @@ import { View, StyleSheet, ActivityIndicator, FlatList, Animated, TouchableOpaci
 import { useFocusEffect } from '@react-navigation/native';
 import AnimaisDesc from './AnimaisDesc';
 import Detalhes from './Detalhes';
+import NovaObservacao from './NovaObservacao';
 
 export default function Home() {
   const [animaisDesc, setAnimaisDesc] = useState([]);
   const [error, setError] = useState(false);
   const [detalhes, setDetalhes] = useState(false);
+  const [adicionarObservacao, setAdicionarObservacao] = useState(false);
   const [animal, setAnimal] = useState(null);
 
   const animaisfiltrados = animaisDesc.filter(animal => animal.animalStatus === 1);
@@ -51,26 +53,33 @@ export default function Home() {
     setAnimal(null);
   }
 
+  function irParaNovaObservacao() {
+    setAdicionarObservacao(true);
+  }
+
+  function voltarParaDetalhes() {
+    setAdicionarObservacao(false);
+  }
+
   return (
     <View style={styles.container}>
       <Animated.View style={{ opacity: fade }}>
-        {animaisDesc.length > 0 ? (
+        {adicionarObservacao ? (
+          <NovaObservacao handleVoltar={voltarParaDetalhes} animal={animal} />
+        ) : detalhes ? (
+          <Detalhes handleVoltar={fecharDetalhes} handleNovaObservacao={irParaNovaObservacao} animal={animal} />
+        ) : animaisDesc.length > 0 ? (
           <FlatList
+          style={styles.flat}
             data={animaisfiltrados}
             renderItem={({ item }) =>
               <View style={styles.itemContainer}>
-                {detalhes && animal && animal.animalId === item.animalId ? (
-                  <Detalhes handle={fecharDetalhes} animal={animal} />
-                ) : (
-                  <View>
-                    <AnimaisDesc animalFoto={item.animalFoto} animalNome={item.animalNome} />
-                    <View style={styles.buttonContainer}>
-                      <TouchableOpacity style={styles.button} onPress={() => exibirdetalhes(item)}>
-                        <Text style={styles.buttonText}>Detalhes</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                )}
+                <AnimaisDesc animalFoto={item.animalFoto} animalNome={item.animalNome} />
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity style={styles.button} onPress={() => exibirdetalhes(item)}>
+                    <Text style={styles.buttonText}>Detalhes</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             }
             keyExtractor={(item) => item.animalId.toString()}
@@ -82,15 +91,15 @@ export default function Home() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#50524F',
+    backgroundColor: '#1C84FF',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
   },
-
   itemContainer: {
     backgroundColor: '#282828',
     borderRadius: 10,
@@ -117,4 +126,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     top: 7,
   },
+
 });

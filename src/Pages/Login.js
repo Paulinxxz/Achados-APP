@@ -1,16 +1,22 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../Context/AuthContext';
+import CadastroUsuario from './CadastroUsuario'
 
 export default function Login() {
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [fazercadastro, setFazerCadastro] = useState(false);
 
   const { Login, error } = useContext(AuthContext);
 
   function FazerLogin() {
     Login(email, senha);
+  }
+
+  if(fazercadastro) {
+    return <CadastroUsuario  handle={setFazerCadastro}/>
   }
 
   return (
@@ -32,8 +38,7 @@ export default function Login() {
         placeholder="Senha"
         secureTextEntry={true}
       />
-      <TouchableOpacity style={styles.bottomLinks}>
-        <Text style={styles.link}>Esqueceu sua senha?</Text>
+      <TouchableOpacity style={styles.bottomLinks} onPress={() => setFazerCadastro(true)}>
         <Text style={styles.link}>Cadastre-se</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.buttonContainer} onPress={FazerLogin}>
