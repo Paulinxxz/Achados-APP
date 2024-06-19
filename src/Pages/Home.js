@@ -11,8 +11,11 @@ export default function Home() {
   const [detalhes, setDetalhes] = useState(false);
   const [adicionarObservacao, setAdicionarObservacao] = useState(false);
   const [animal, setAnimal] = useState(null);
+  const [selectedTab, setSelectedTab] = useState('desaparecidos');
 
-  const animaisfiltrados = animaisDesc.filter(animal => animal.animalStatus === 1);
+  const animaisfiltrados = animaisDesc.filter(animal => 
+    selectedTab === 'desaparecidos' ? animal.animalStatus === 1 : animal.animalStatus !== 1
+  );
 
   const fade = useRef(new Animated.Value(0)).current;
 
@@ -63,29 +66,57 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={{ opacity: fade }}>
+      <Animated.View style={{ opacity: fade, flex: 1 }}>
         {adicionarObservacao ? (
           <NovaObservacao handleVoltar={voltarParaDetalhes} animal={animal} />
         ) : detalhes ? (
           <Detalhes handleVoltar={fecharDetalhes} handleNovaObservacao={irParaNovaObservacao} animal={animal} />
-        ) : animaisDesc.length > 0 ? (
-          <FlatList
-          style={styles.flat}
-            data={animaisfiltrados}
-            renderItem={({ item }) =>
-              <View style={styles.itemContainer}>
-                <AnimaisDesc animalFoto={item.animalFoto} animalNome={item.animalNome} />
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity style={styles.button} onPress={() => exibirdetalhes(item)}>
-                    <Text style={styles.buttonText}>Detalhes</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            }
-            keyExtractor={(item) => item.animalId.toString()}
-          />
         ) : (
-          <ActivityIndicator size="large" color="#00ff00" />
+          <View style={styles.content}>
+            <View style={styles.tabContainer}>
+              <TouchableOpacity 
+                style={[styles.tabButton, selectedTab === 'desaparecidos' && styles.tabButtonSelected]} 
+                onPress={() => setSelectedTab('desaparecidos')}
+              >
+                <Text style={styles.tabButtonText}>Desaparecidos</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.tabButton, selectedTab === 'encontrados' && styles.tabButtonSelected]} 
+                onPress={() => setSelectedTab('encontrados')}
+              >
+                <Text style={styles.tabButtonText}>Encontrados</Text>
+              </TouchableOpacity>
+            </View>
+            {animaisDesc.length > 0 ? (
+              <FlatList
+                style={styles.flat}
+                data={animaisfiltrados}
+                renderItem={({ item }) =>
+                  <View style={[
+                    styles.itemContainer, 
+                    selectedTab === 'encontrados' && styles.closedItemContainer
+                  ]}>
+                    <AnimaisDesc 
+                      animalFoto={item.animalFoto} 
+                      animalNome={item.animalNome} 
+                      style={selectedTab === 'encontrados' ? styles.closedAnimalDesc : null}
+                    />
+                    {selectedTab === 'encontrados' && (
+                      <Text style={styles.closedText}>X</Text>
+                    )}
+                    <View style={styles.buttonContainer}>
+                      <TouchableOpacity style={styles.button} onPress={() => exibirdetalhes(item)}>
+                        <Text style={styles.buttonText}>Detalhes</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                }
+                keyExtractor={(item) => item.animalId.toString()}
+              />
+            ) : (
+              <ActivityIndicator size="large" color="#00ff00" />
+            )}
+          </View>
         )}
       </Animated.View>
     </View>
@@ -100,6 +131,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
+  content: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  tabButton: {
+    padding: 10,
+    backgroundColor: '#007bff',
+    borderRadius: 4,
+    top: 5,
+  },
+  tabButtonSelected: {
+    backgroundColor: '#0056b3',
+  },
+  tabButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  flat: {
+    flex: 1,
+    width: '100%',
+  },
   itemContainer: {
     backgroundColor: '#282828',
     borderRadius: 10,
@@ -107,6 +170,10 @@ const styles = StyleSheet.create({
     padding: 25,
     alignItems: 'center',
     width: '100%',
+    position: 'relative',
+  },
+  closedItemContainer: {
+    backgroundColor: '#282828',
   },
   buttonContainer: {
     marginTop: 10,
@@ -126,5 +193,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     top: 7,
   },
-
+  closedText: {
+    position: 'absolute',
+    right: 10,
+    color: 'red',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
 });

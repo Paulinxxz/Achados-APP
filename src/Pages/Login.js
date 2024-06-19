@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '80%',
     height: 50,
-    backgroundColor: '#007bff',
+    backgroundColor: '#292929',
     borderRadius: 7,
     justifyContent: 'center',
     alignItems: 'center',
@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   link: {
-    color: '#007bff',
+    color: '#3C8EE6',
+    fontWeight:'bold',
     textDecorationLine: 'underline',
   },
   bottomLinks: {
